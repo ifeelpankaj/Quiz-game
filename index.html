@@ -23,12 +23,105 @@
 <body>
     <div class="flex">
         <div><h4>Score:</h4></div>
-        <div class="box" id="score"></div>
-        </div>
+        <div class="box" id="score">0</div>
+    </div>
     <h2 id="question"></h2>
-    <ul id="choices">
-        </ul>
-        <h4 id="next" onclick="nextqn()">Next</h4>
-        <script src="app.js"></script>
+    <ul id="choices"></ul>
+    <button id="next" onclick="nextqn()">Next</button>
+        <script>
+            const quizData = [
+  {
+    question: "What is the capital of Japan?",
+    choices: ["Tokyo", "Seoul", "Beijing"],
+    correct: "Tokyo",
+  },
+  {
+    question: "Which gas do plants primarily absorb from the atmosphere?",
+    choices: ["Carbon Monoxide", "Oxygen", "Carbon Dioxide"],
+    correct: "Carbon Dioxide",
+  },
+  {
+    question: "What is the largest mammal in the world?",
+    choices: ["Elephant", "Blue Whale", "Giraffe"],
+    correct: "Blue Whale",
+  },
+  {
+    question: "What is the symbol for the chemical element 'Gold'?",
+    choices: ["Go", "Gd", "Au"],
+    correct: "Au",
+  },
+  {
+    question: "Which planet is known as the 'Morning Star' or 'Evening Star'?",
+    choices: ["Venus", "Mars", "Mercury"],
+    correct: "Venus",
+  },
+  {
+    question: "Which famous scientist developed the theory of relativity?",
+    choices: ["Isaac Newton", "Albert Einstein", "Galileo Galilei"],
+    correct: "Albert Einstein",
+  },
+  {
+    question: "In which year did the Titanic sink on its maiden voyage?",
+    choices: ["1902", "1912", "1922"],
+    correct: "1902",
+  },
+  {
+    question: "What is the largest planet in our solar system?",
+    choices: ["Mars", "Jupiter", "Saturn"],
+    correct: "Jupiter",
+  },
+  {
+    question: "Which natural disaster is measured on the Richter scale?",
+    choices: ["Tornado", "Earthquake", "Hurricane"],
+    correct: "Earthquake",
+  },
+  {
+    question: "What is the chemical symbol for water?",
+    choices: ["H2O", "CO2", "O2"],
+    correct: "H2O",
+  },
+];
+let score = 0;
+        let indexNumber = 0;
+
+        function questionShown() {
+            let question = document.getElementById("question");
+            question.innerText = quizData[indexNumber].question;
+            let choices = document.getElementById("choices");
+            choices.innerHTML = "";
+            for (let i = 0; i < quizData[indexNumber].choices.length; i++) {
+                choices.innerHTML += `
+                    <li style="list-style: none;">
+                        <input type="radio" name="choose" value="${quizData[indexNumber].choices[i]}">${quizData[indexNumber].choices[i]}
+                    </li>`;
+            }
+        }
+
+        questionShown();
+
+        // Score count
+        function scorecount() {
+            let selectedChoice = document.querySelector('input[name="choose"]:checked');
+            if (selectedChoice && selectedChoice.value === quizData[indexNumber].correct) {
+                score += 10;
+                updateScore(); // Update the score 
+            }
+        }
+
+        function updateScore() {
+            document.getElementById("score").innerText = score;
+        }
+
+
+        function nextqn() {
+            scorecount(); 
+            indexNumber++;
+            if (indexNumber < quizData.length) {
+                questionShown();
+            } else {
+                alert("Quiz Completed! Your Score: " + score);
+            }
+        }
+     </script>
 </body>
 </html>
