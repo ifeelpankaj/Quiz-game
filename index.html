@@ -3,125 +3,275 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz Game</title>
+    <title>Quiz</title>
     <style>
-        .box{
-            width:50px;
-            height:40px;
+        body {
+            background: linear-gradient(135deg, #007BFF, #FFD700, #FF5733, #33FF57);
+            background-size: 400% 400%;
+            animation: gradientBG 15s ease infinite;
+            border-radius: 10px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            /* padding: 20px; */
             text-align: center;
-            border: 1px solid black;
-            color:black;
+            width: 70%;
+            max-width: 600px;
+            margin: 20px auto;
+            font-family: Arial, sans-serif;
         }
-        .flex{
-            display:flex;
-            gap:10px;
-            justify-content: center;
-            align-items: center;
+
+        .quiz-container {
+            animation: gradientBG 15s ease infinite;
         }
-        </style>
+
+        .quiz-header {
+            border-bottom: 1px solid  #333;
+            padding: 1px;
+            color: #fff;
+            border-radius: 10px 10px 0 0;
+            text-align: center;
+        }
+
+        .quiz-body {
+            padding: 20px;
+            text-align: center;
+        }
+
+        .score-container {
+            display: inline-block;
+            margin-bottom: 20px;
+        }
+
+        .box {
+            width: 50px;
+            height: 50px;
+            line-height: 50px;
+            background-color: #007BFF;
+            color: #fff;
+            border-radius: 50%;
+            margin-left: 10px;
+            font-size: 20px;
+        }
+
+        #question {
+            font-size: 24px;
+            margin-top: 20px;
+            color: #333;
+        }
+
+        ul {
+            list-style: none;
+            padding: 0;
+        }
+
+        li {
+            margin: 10px 0;
+        }
+
+        input[type="radio"] {
+            display: none;
+        }
+
+        label {
+            display: block;
+            position: relative;
+            padding-left: 35px;
+            cursor: pointer;
+            color: #333;
+        }
+
+        label::before {
+            content: "";
+            display: inline-block;
+            width: 20px;
+            height: 20px;
+            border: 2px solid black;
+            border-radius: 50%;
+            position: absolute;
+            left: 0;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        label::after {
+            content: "";
+            display: none;
+            width: 10px;
+            height: 10px;
+            background-color: black;
+            border-radius: 50%;
+            position: absolute;
+            left: 5px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        input[type="radio"]:checked + label::after {
+            display: block;
+        }
+
+        button {
+            background-color: #24b1c6;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 5px;
+            cursor: pointer;
+            margin-top: 20px;
+        }
+
+        #message {
+            margin-top: 10px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #007BFF;
+        }
+
+        #emoji {
+            font-size: 48px;
+            margin-top: 20px;
+        }
+    </style>
 </head>
 <body>
-    <div class="flex">
-        <div><h4>Score:</h4></div>
-        <div class="box" id="score">0</div>
+<div class="quiz-container">
+    <div class="quiz-header">
+        <h1>Quiz</h1>
     </div>
-    <h2 id="question"></h2>
-    <ul id="choices"></ul>
-    <button id="next" onclick="nextqn()">Next</button>
-        <script>
-            const quizData = [
-  {
-    question: "What is the capital of Japan?",
-    choices: ["Tokyo", "Seoul", "Beijing"],
-    correct: "Tokyo",
-  },
-  {
-    question: "Which gas do plants primarily absorb from the atmosphere?",
-    choices: ["Carbon Monoxide", "Oxygen", "Carbon Dioxide"],
-    correct: "Carbon Dioxide",
-  },
-  {
-    question: "What is the largest mammal in the world?",
-    choices: ["Elephant", "Blue Whale", "Giraffe"],
-    correct: "Blue Whale",
-  },
-  {
-    question: "What is the symbol for the chemical element 'Gold'?",
-    choices: ["Go", "Gd", "Au"],
-    correct: "Au",
-  },
-  {
-    question: "Which planet is known as the 'Morning Star' or 'Evening Star'?",
-    choices: ["Venus", "Mars", "Mercury"],
-    correct: "Venus",
-  },
-  {
-    question: "Which famous scientist developed the theory of relativity?",
-    choices: ["Isaac Newton", "Albert Einstein", "Galileo Galilei"],
-    correct: "Albert Einstein",
-  },
-  {
-    question: "In which year did the Titanic sink on its maiden voyage?",
-    choices: ["1902", "1912", "1922"],
-    correct: "1902",
-  },
-  {
-    question: "What is the largest planet in our solar system?",
-    choices: ["Mars", "Jupiter", "Saturn"],
-    correct: "Jupiter",
-  },
-  {
-    question: "Which natural disaster is measured on the Richter scale?",
-    choices: ["Tornado", "Earthquake", "Hurricane"],
-    correct: "Earthquake",
-  },
-  {
-    question: "What is the chemical symbol for water?",
-    choices: ["H2O", "CO2", "O2"],
-    correct: "H2O",
-  },
-];
-let score = 0;
-        let indexNumber = 0;
+    <div class="quiz-body">
+        <div class="score-container">
+            <h4>Score:</h4>
+            <div class="box" id="score">0</div>
+        </div>
+        <h2 id="question"></h2>
+        <ul id="choices"></ul>
+        <button id="next" onclick="nextqn()">Next</button>
+        <div id="message"></div>
+        <div id="emoji"></div>
+    </div>
+</div>
 
-        function questionShown() {
-            let question = document.getElementById("question");
-            question.innerText = quizData[indexNumber].question;
-            let choices = document.getElementById("choices");
-            choices.innerHTML = "";
-            for (let i = 0; i < quizData[indexNumber].choices.length; i++) {
-                choices.innerHTML += `
-                    <li style="list-style: none;">
-                        <input type="radio" name="choose" value="${quizData[indexNumber].choices[i]}">${quizData[indexNumber].choices[i]}
-                    </li>`;
-            }
+<script>
+    const quizData = [
+        {
+            question: "What is the capital of Japan?",
+            choices: ["Tokyo", "Seoul", "Beijing"],
+            correct: "Tokyo",
+        },
+        {
+            question: "Which gas do plants primarily absorb from the atmosphere?",
+            choices: ["Carbon Monoxide", "Oxygen", "Carbon Dioxide"],
+            correct: "Carbon Dioxide",
+        },
+        {
+            question: "What is the largest mammal in the world?",
+            choices: ["Elephant", "Blue Whale", "Giraffe"],
+            correct: "Blue Whale",
+        },
+        {
+            question: "What is the symbol for the chemical element 'Gold'?",
+            choices: ["Go", "Gd", "Au"],
+            correct: "Au",
+        },
+        {
+            question: "Which planet is known as the 'Morning Star' or 'Evening Star'?",
+            choices: ["Venus", "Mars", "Mercury"],
+            correct: "Venus",
+        },
+        {
+            question: "Which famous scientist developed the theory of relativity?",
+            choices: ["Isaac Newton", "Albert Einstein", "Galileo Galilei"],
+            correct: "Albert Einstein",
+        },
+        {
+            question: "In which year did the Titanic sink on its maiden voyage?",
+            choices: ["1902", "1912", "1922"],
+            correct: "1902",
+        },
+        {
+            question: "What is the largest planet in our solar system?",
+            choices: ["Mars", "Jupiter", "Saturn"],
+            correct: "Jupiter",
+        },
+        {
+            question: "Which natural disaster is measured on the Richter scale?",
+            choices: ["Tornado", "Earthquake", "Hurricane"],
+            correct: "Earthquake",
+        },
+        {
+            question: "What is the chemical symbol for water?",
+            choices: ["H2O", "CO2", "O2"],
+            correct: "H2O",
+        },
+    ];
+    let score = 0;
+    let indexNumber = 0;
+
+    function questionShown() {
+        let question = document.getElementById("question");
+        question.innerText = quizData[indexNumber].question;
+        let choices = document.getElementById("choices");
+        choices.innerHTML = "";
+        for (let i = 0; i < quizData[indexNumber].choices.length; i++) {
+            choices.innerHTML += `
+                <li>
+                    <input type="radio" name="choose" id="choice${i}" value="${quizData[indexNumber].choices[i]}">
+                    <label for="choice${i}">${quizData[indexNumber].choices[i]}</label>
+                </li>`;
         }
+    }
 
-        questionShown();
+    questionShown();
 
-        // Score count
-        function scorecount() {
-            let selectedChoice = document.querySelector('input[name="choose"]:checked');
-            if (selectedChoice && selectedChoice.value === quizData[indexNumber].correct) {
+    // Score count
+    function scorecount() {
+        let selectedChoice = document.querySelector('input[name="choose"]:checked');
+        if (selectedChoice) {
+            if (selectedChoice.value === quizData[indexNumber].correct) {
                 score += 10;
-                updateScore(); // Update the score 
-            }
-        }
-
-        function updateScore() {
-            document.getElementById("score").innerText = score;
-        }
-
-
-        function nextqn() {
-            scorecount(); 
-            indexNumber++;
-            if (indexNumber < quizData.length) {
-                questionShown();
+                updateScore();
+                displayMessage("Correct!");
+                displayEmoji("👍");
             } else {
-                alert("Quiz Completed! Your Score: " + score);
+                displayMessage("Wrong! The answer is " + quizData[indexNumber].correct);
+                displayEmoji("👎");
             }
+        } else {
+            displayMessage("No answer selected.");
+            displayEmoji("❓");
         }
-     </script>
+    }
+
+    function updateScore() {
+        document.getElementById("score").innerText = score;
+    }
+
+    function displayMessage(message) {
+        let messageDiv = document.getElementById("message");
+        messageDiv.innerText = message;
+    }
+
+    function displayEmoji(emoji) {
+        let emojiDiv = document.getElementById("emoji");
+        emojiDiv.innerText = emoji;
+    }
+
+    function nextqn() {
+        scorecount();
+        indexNumber++;
+        if (indexNumber < quizData.length) {
+            questionShown();
+            clearMessage();
+        } else {
+            displayMessage("Quiz Completed! Your Score: " + score);
+            displayEmoji("🎉");
+            document.getElementById("next").disabled = true;
+        }
+    }
+
+    function clearMessage() {
+        let messageDiv = document.getElementById("message");
+        messageDiv.innerText = "";
+    }
+</script>
 </body>
 </html>
